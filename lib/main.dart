@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'models/course.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +60,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  String text = '';
+  late List<Course> courses;
 
   void _incrementCounter() {
     setState(() {
@@ -76,9 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void loadCoordinates() async {
-    final str = await rootBundle.loadString('assets/coordinates.json');
+    final jsonStr = await rootBundle.loadString('lib/assets/coordinates.json');
     setState(() {
-      text = str;
+      courses = Course.decodeJson(jsonStr);
+      for (var c in courses) {
+        for (var h in c.holes) {
+          print(h.front);
+          print(h.mid);
+          print(h.back);
+        }
+      }
     });
   }
 
@@ -98,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(text),
+        title: Text("hej"),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
