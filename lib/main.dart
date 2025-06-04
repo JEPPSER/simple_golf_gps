@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_golf_gps/course_list.dart';
+import 'package:simple_golf_gps/models/coordinates.dart';
 
 import 'models/course.dart';
 
@@ -60,6 +61,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late List<Course> courses;
   Course? selectedCourse;
+  int currentHole = 0;
+  String? mid;
+  String? front;
+  String? back;
 
   @override
   void initState() {
@@ -71,14 +76,22 @@ class _MyHomePageState extends State<MyHomePage> {
     final jsonStr = await rootBundle.loadString('lib/assets/coordinates.json');
     setState(() {
       courses = Course.decodeJson(jsonStr);
-      for (var c in courses) {
-        for (var h in c.holes) {
-          print(h.front);
-          print(h.mid);
-          print(h.back);
-        }
-      }
     });
+  }
+
+  void calculateDistances() {
+    final myLocation = Coordinates(
+      latitude: 56.90246410845269,
+      longitude: 14.867274261226886,
+    );
+    final hole = selectedCourse!.holes[currentHole];
+
+    front =
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.front)).round()} m';
+    mid =
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.mid)).round()} m';
+    back =
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.back)).round()} m';
   }
 
   @override
@@ -86,12 +99,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("hej"),
+        title: Text(selectedCourse?.name ?? ''),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text(selectedCourse?.name ?? '')],
+          children: <Widget>[
+            if (selectedCourse != null) ...[
+              Text(front!),
+              Text(mid!),
+              Text(back!),
+            ],
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -104,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           setState(() {
             selectedCourse = course;
+            calculateDistances();
           });
         },
         tooltip: 'Välj bana',
