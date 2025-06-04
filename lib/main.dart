@@ -123,6 +123,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  void changeHole(int value) {
+    setState(() {
+      currentHole += value;
+      if (currentHole >= selectedCourse!.holes.length) {
+        currentHole = 0;
+      } else if (currentHole < 0) {
+        currentHole = selectedCourse!.holes.length - 1;
+      }
+      calculateDistances();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,17 +142,66 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(selectedCourse?.name ?? ''),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (selectedCourse != null) ...[
-              Text(front!),
-              Text(mid!),
-              Text(back!),
-            ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (selectedCourse != null) ...[
+            Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      changeHole(-1);
+                    },
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Text(
+                      "Hål ${currentHole + 1}",
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      changeHole(1);
+                    },
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (selectedCourse != null) ...[
+                      Text(front!),
+                      Text(mid!),
+                      Text(back!),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ] else ...[
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Välj en golfbana!', style: TextStyle(fontSize: 24)),
+                  ],
+                ),
+              ),
+            ),
           ],
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -150,10 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
               return CourseList(courses: courses);
             },
           );
-          setState(() {
-            selectedCourse = course;
-            calculateDistances();
-          });
+          if (course != null) {
+            setState(() {
+              selectedCourse = course;
+              calculateDistances();
+            });
+          }
         },
         tooltip: 'Välj bana',
         child: const Icon(Icons.location_on_outlined),
