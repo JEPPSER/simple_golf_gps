@@ -67,7 +67,10 @@ class CourseListState extends State<CourseList> {
                           ),
                           elevation: 2,
                           child: ListTile(
-                            leading: Icon(Icons.book, color: Colors.indigo),
+                            leading: Icon(
+                              Icons.golf_course,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                             title: Text(
                               _filteredCourses[index].name,
                               style: TextStyle(fontWeight: FontWeight.w600),

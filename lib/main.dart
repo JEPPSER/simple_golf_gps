@@ -19,8 +19,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Golfavstånd',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       ),
       home: const MyHomePage(title: 'Golfavstånd'),
     );
@@ -198,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 front!,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
@@ -212,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 mid!,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
@@ -226,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 back!,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
@@ -264,6 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           if (course != null) {
             setState(() {
+              currentHole = 0;
               selectedCourse = course;
               calculateDistances();
             });
