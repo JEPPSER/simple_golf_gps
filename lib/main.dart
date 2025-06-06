@@ -91,11 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final hole = selectedCourse!.holes[currentHole];
 
     front =
-        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.front)).round()}';
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.front)).round()} m';
     mid =
-        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.mid)).round()}';
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.mid)).round()} m';
     back =
-        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.back)).round()}';
+        '${myLocation.distanceTo(Coordinates.parseCoordinates(hole.back)).round()} m';
   }
 
   void stopListeningToLocationChanges() {
@@ -186,49 +186,49 @@ class _MyHomePageState extends State<MyHomePage> {
                           SizedBox(
                             width: 350,
                             child: Image.asset(
-                              'lib/assets/green.png',
+                              'lib/assets/green-new.png',
                               fit: BoxFit
                                   .cover, // or BoxFit.fill depending on your need
                             ),
                           ),
                           Positioned(
-                            top: 29,
+                            top: 66,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 50),
+                              padding: const EdgeInsets.only(left: 100),
                               child: Text(
                                 front!,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
                           ),
                           Positioned(
-                            top: 137,
+                            top: 133,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 50),
+                              padding: const EdgeInsets.only(left: 98),
                               child: Text(
                                 mid!,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
                           ),
                           Positioned(
-                            top: 231,
+                            top: 195,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 50),
+                              padding: const EdgeInsets.only(left: 94),
                               child: Text(
                                 back!,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
