@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Golfavstånd',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textTheme: GoogleFonts.fredokaTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       ),
       home: const MyHomePage(title: 'Golfavstånd'),
