@@ -40,9 +40,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool initialized = false;
   Position? _currentPosition;
   StreamSubscription<Position>? _positionStream;
-  late List<Course> courses;
+  List<Course>? courses;
   Course? selectedCourse;
   int currentHole = 0;
   String? mid;
@@ -62,6 +63,35 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  void autoSelectCourse() {
+    if (courses == null) {
+      return;
+    }
+
+    var myPosition = Coordinates(
+      latitude: _currentPosition!.latitude,
+      longitude: _currentPosition!.longitude,
+    );
+
+    var closestDistance = -1.0;
+    late Course closestCourse;
+
+    for (var course in courses!) {
+      var hole = course.holes[0];
+      var distance = Coordinates.parseCoordinates(
+        hole.mid,
+      ).distanceTo(myPosition);
+
+      if (closestDistance == -1.0 || distance < closestDistance) {
+        closestDistance = distance;
+        closestCourse = course;
+      }
+    }
+
+    selectedCourse = closestCourse;
+    calculateDistances();
+  }
+
   Future<void> _initLocation() async {
     try {
       _currentPosition = await _determinePosition();
@@ -72,6 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
           .listen((Position position) {
             setState(() {
               _currentPosition = position;
+              if (!initialized && _currentPosition != null && courses != null) {
+                autoSelectCourse();
+                initialized = true;
+              }
+              calculateDistances();
             });
           });
     } catch (e) {
@@ -79,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void loadCoordinates() async {
+  Future<void> loadCoordinates() async {
     final jsonStr = await rootBundle.loadString('lib/assets/coordinates.json');
     setState(() {
       courses = Course.decodeJson(jsonStr);
@@ -249,7 +284,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Välj en golfbana!', style: TextStyle(fontSize: 24)),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: CircularProgressIndicator(),
+                    ),
+                    Text('Laddar golfbana...', style: TextStyle(fontSize: 24)),
                   ],
                 ),
               ),
@@ -262,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
           final course = await showDialog(
             context: context,
             builder: (BuildContext context) {
-              return CourseList(courses: courses);
+              return CourseList(courses: courses!);
             },
           );
           if (course != null) {
